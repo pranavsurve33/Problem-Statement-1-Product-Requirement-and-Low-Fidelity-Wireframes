@@ -1,0 +1,108 @@
+Problem Statement 1: Product Requirement and Low-Fidelity Wireframes
+ 1. Product Requirements Document (PRD)
+1.1 Title:
+Container Image Vulnerability Dashboard
+
+1.2 Objective:
+To build a centralized dashboard that enables users to:
+
+View vulnerability status across all container images in their repository.
+
+Identify and prioritize remediation for images with critical/high vulnerabilities.
+
+Take informed actions such as initiating fixes or generating reports.
+
+1.3 Target Users:
+DevOps Engineers
+
+Security Analysts
+
+Site Reliability Engineers (SREs)
+
+Platform Engineers
+
+1.4 Key Features & Functional Requirements:
+Feature	Description
+Dashboard Overview	High-level summary of total scanned images, number of images with vulnerabilities, breakdown by severity (Critical, High, Medium, Low).
+Image List View	Tabular list of container images with details like name, version, last scanned, and a summary of vulnerabilities.
+Severity Filter & Search	Ability to filter images by severity and search using image name or tag.
+Detailed Image View	On selecting an image, show detailed vulnerabilities including CVE ID, description, affected components, severity, and fix version (if available).
+Fix Recommendation	Suggest upgrade paths or patches based on known fixes.
+Batch Actions	Select multiple images and tag them for fixes, ignore, or export.
+Scan Trigger	Manual trigger to re-scan an image or group of images.
+Export Reports	Export vulnerability data in PDF/CSV for audits or documentation.
+
+1.5 Non-Functional Requirements:
+Scalability: Should handle thousands of images efficiently.
+
+Responsiveness: UI should be responsive across desktop and tablet.
+
+Security: Ensure role-based access control and data protection.
+
+Performance: Dashboard load time under 3 seconds for 1000+ images.
+
+1.6 User Journey Example:
+User logs in to dashboard.
+
+User sees an overview panel with vulnerability stats.
+
+User filters for Critical vulnerabilities.
+
+User selects an image with high CVE count.
+
+Detailed view shows affected packages and recommendations.
+
+User selects a fix path or exports data.
+
+
+ 2. Low-Fidelity Wireframes
+Wireframes are sketched below in text format. For actual wireframes, I can generate images or draw boxes if needed.
+
+2.1 Dashboard Overview Page
++----------------------------------------------------------+
+| [Security Dashboard]                                     |
++----------------------------------------------------------+
+| Total Images: 3,200 | Vulnerable Images: 1,245           |
+| Critical: 321 | High: 654 | Medium: 198 | Low: 72        |
++----------------------------------------------------------+
+| [Search Box]   [Severity Filter ▼]   [Export ▼]          |
++----------------------------------------------------------+
+| Image Name   | Tag  | Last Scanned | Critical | High | ↻ |
+|--------------|------|--------------|----------|-------|---|
+| nginx        | 1.14 | 1 day ago    | 2        | 5     |   |
+| ubuntu       | 20.04| 3 days ago   | 4        | 8     |   |
+| redis        | 6.0  | 1 hour ago   | 0        | 1     |   |
++----------------------------------------------------------+
+
+2.2 Detailed Image View Page
+
++---------------------------------------------+
+| Image: ubuntu:20.04                         |
++---------------------------------------------+
+| CVE ID      | Component | Severity | Fix     |
+|-------------|-----------|----------|---------|
+| CVE-2023-1  | openssl   | Critical | 1.1.1k  |
+| CVE-2023-2  | libc      | High     | 2.31-0  |
+| CVE-2023-3  | zlib      | Medium   | -       |
++---------------------------------------------+
+| [Apply Fixes] [Ignore] [Export Report]      |
++---------------------------------------------+
+
+
+3.(Bonus) Development Action Items
+
+Action items:
+Design REST API for vulnerability scan results
+Implement RBAC for dashboard access
+Integrate CVE database (e.g., NVD, Trivy)
+Create Scheduled Scan Jobs
+Add Notification System
+
+Notes:
+API should support pagination, filters, and CVE grouping
+Define roles: Admin, Viewer, Editor
+Required to fetch latest vulnerability info
+Link with Docker Hub, AWS ECR, GCR etc.
+For automated scanning of image updates
+For alerting users about new critical CVEs
+Container Registry Integration
