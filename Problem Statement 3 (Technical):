@@ -1,0 +1,133 @@
+Problem Statement 3 (Technical):
+Step-by-Step Execution
+
+ Step #1: GoLang Web App for Date & Time
+// filename: main.go
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"time"
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	currentTime := time.Now().Format("2006-01-02 15:04:05")
+	fmt.Fprintf(w, "Current Date and Time: %s", currentTime)
+}
+
+func main() {
+	http.HandleFunc("/", handler)
+	fmt.Println("Server running on port 8080...")
+	http.ListenAndServe(":8080", nil)
+}
+
+1.2 Create a Dockerfile
+# syntax=docker/dockerfile:1
+FROM golang:1.21-alpine
+
+WORKDIR /app
+
+COPY . .
+
+RUN go build -o datetime .
+
+EXPOSE 8080
+
+CMD ["./datetime"]
+
+1.3 Push Code to GitHub
+Create a GitHub repo: datetime-app
+
+Push the code (main.go and Dockerfile) to the repo
+git init
+git remote add origin https://github.com/yourusername/datetime-app.git
+git add .
+git commit -m "Initial commit"
+git push -u origin main
+
+1.4 Build Docker Image & Push to DockerHub
+docker build -t yourdockerhubusername/datetime-app:latest .
+docker login
+docker push yourdockerhubusername/datetime-app:latest
+
+
+ Step #2: Deploy with Kubernetes (2 replicas)
+ 2.1 Create Deployment YAML
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datetime-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: datetime-app
+  template:
+    metadata:
+      labels:
+        app: datetime-app
+    spec:
+      containers:
+      - name: datetime-app
+        image: yourdockerhubusername/datetime-app:latest
+        ports:
+        - containerPort: 8080
+
+
+2.2 Create Service YAML
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: datetime-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: datetime-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
+Apply to Kubernetes
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+
+Confirm the pods and service:
+kubectl get pods
+kubectl get svc
+
+
+When using Play-with-K8s or Qwiklabs/GCP, make sure LoadBalancer is supported — if not, switch to NodePort and use external IP.
+
+Step #3: Expose to WAN
+Option 1: Cloud Provider (like GCP, AWS, Azure)
+Use LoadBalancer type service (as shown above).
+
+Get the external IP using:
+kubectl get svc datetime-service
+
+Option 2: Use NodePort (if LoadBalancer isn’t supported)
+Change service.yaml:
+spec:
+  type: NodePort
+
+After applying, run:
+minikube service datetime-service --url
+
+
+Deliverables Checklist
+
+1.Item:
+GitHub Repo
+DockerHub Repo
+JSON/YAML
+External URL
+
+2.Description:
+Contains main.go, Dockerfile, deployment.yaml, service.yaml
+Public image pushed (e.g., yourdockerhubusername/datetime-app:latest)
+Kubernetes files included and applied
+App is exposed and can show current Date & Time
