@@ -1,0 +1,52 @@
+Problem statement 2: Task Breakdown: Kubernetes Security Scan
+Step 1: Install a Local Kubernetes Cluster
+Choose one from below based on your system:
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+minikube start
+
+Option B: Kind
+go install sigs.k8s.io/kind@latest
+kind create cluster
+
+Option C: K3s (lightweight)
+curl -sfL https://get.k3s.io | sh -
+
+ Step 2: Install Kubescape
+curl -s https://raw.githubusercontent.com/kubescape/kubescape/master/install.sh | /bin/bash
+
+Verify installation:
+kubescape version
+
+Step 3: Run the Security Scan
+kubescape scan --submit=false --format json --output results.json
+
+This command will:
+
+Scan the current context (your local cluster).
+
+Skip submission to ARMO cloud (--submit=false).
+
+Save results in JSON format to results.json.
+
+You can also run a specific framework like:
+kubescape scan framework nsa --format json --output results.json
+
+
+Step 4: Deliverable
+Once complete, your JSON file (e.g., results.json) will contain a detailed list of Kubernetes security findings.
+Deliver this file as the main output for the task.
+
+ Optional Recommendations:
+Open results.json in a JSON viewer or VS Code to review findings like:
+
+RoleBindings with over-permissive access
+
+Workloads running as root
+
+Resources missing limits/requests
+
+Network policies not defined
+
+You may filter out or redact sensitive metadata before sharing.
+
